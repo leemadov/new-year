@@ -1,0 +1,21 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background-color: #f0f0f0;
+    background-size: cover;
+    transition: background 1s ease-in-out;
+  }
+  
+  .countdown {
+    margin-top: 100px;
+  }
+  
+  #timer {
+    font-size: 24px;
+    margin-top: 20px;
+  }
+  
+  .confetti-bg {
+    background-image: url('confetti.gif');
+  }
+  
