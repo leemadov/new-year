@@ -1,8 +1,37 @@
-// Jan 1, 2026 00:00:00 at UTC+2
+let countdownInterval;
+let timeOffset = 0;
+
+// Fetch accurate time from API
+async function syncTime() {
+  try {
+    const response = await fetch(
+      "https://worldtimeapi.org/api/timezone/Etc/GMT-2"
+    );
+    const data = await response.json();
+
+    // API returns current UTC timestamp in seconds
+    const apiTime = data.unixtime * 1000;
+
+    // Calculate offset between API time and device time
+    timeOffset = apiTime - Date.now();
+
+    startCountdown();
+  } catch (error) {
+    console.error("Time sync failed:", error);
+  }
+}
+
+// Jan 1, 2026 00:00 at UTC+2 → Dec 31, 2025 22:00 UTC
 const countdownDate = new Date("2025-12-31T22:00:00Z").getTime();
 
+function startCountdown() {
+  updateCountdown();
+  countdownInterval = setInterval(updateCountdown, 1000);
+}
+
 function updateCountdown() {
-  const now = Date.now();
+  // Use synced time instead of device time
+  const now = Date.now() + timeOffset;
   const difference = countdownDate - now;
 
   if (difference <= 0) {
@@ -25,5 +54,5 @@ function updateCountdown() {
   document.getElementById("seconds").innerText = pad(seconds);
 }
 
-updateCountdown();
-const countdownInterval = setInterval(updateCountdown, 1000);
+// Start by syncing time
+syncTime();
